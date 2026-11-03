@@ -12,15 +12,30 @@ public class GameVerification : MonoBehaviour
     string folder;
     readonly List<string> results=new List<string>();
     readonly Dictionary<string,float> originals=new Dictionary<string,float>();
+    bool persistence;
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void Boot()
     {
         string trigger=Path.GetFullPath(Path.Combine(Application.dataPath,"../QA_REQUEST"));
-        if(!File.Exists(trigger)) return;
-        File.Delete(trigger);
-        var q=new GameObject("Integration verification").AddComponent<GameVerification>();DontDestroyOnLoad(q);
+        string persisted=Path.GetFullPath(Path.Combine(Application.dataPath,"../QA_PERSIST_REQUEST"));
+        if(!File.Exists(trigger) && !File.Exists(persisted)) return;
+        bool second=File.Exists(persisted);
+        if(File.Exists(trigger)) File.Delete(trigger);
+        var q=new GameObject("Integration verification").AddComponent<GameVerification>();q.persistence=second;DontDestroyOnLoad(q);
     }
-    void Start() {folder=Path.GetFullPath(Path.Combine(Application.dataPath,"../../Screenshots"));Directory.CreateDirectory(folder);Application.logMessageReceived+=Log;StartCoroutine(Run());}
+    void Start() {folder=Path.GetFullPath(Path.Combine(Application.dataPath,"../../Screenshots"));Directory.CreateDirectory(folder);Application.logMessageReceived+=Log;if(persistence)StartCoroutine(PersistCheck());else StartCoroutine(Run());}
+    IEnumerator PersistCheck()
+    {
+        results.AddRange(File.ReadAllLines(Path.Combine(folder,"Verification.txt")));
+        string file=Path.GetFullPath(Path.Combine(Application.dataPath,"../QA_PERSIST_REQUEST"));
+        foreach(string line in File.ReadAllLines(file))
+        {
+            var parts=line.Split('|');float expected=float.Parse(parts[1],System.Globalization.CultureInfo.InvariantCulture), old=float.Parse(parts[2],System.Globalization.CultureInfo.InvariantCulture);
+            Check(Mathf.Abs(PlayerPrefs.GetFloat(parts[0],-100)-expected)<.001f,"Record survives full process restart: "+parts[0]);
+            if(old<0)PlayerPrefs.DeleteKey(parts[0]);else PlayerPrefs.SetFloat(parts[0],old);
+        }
+        PlayerPrefs.Save();File.Delete(file);results.Add("Test-generated records restored; final verification complete.");Write();yield return new WaitForSecondsRealtime(.5f);Application.Quit();
+    }
     void Log(string message,string trace,LogType type) {if(type==LogType.Exception || type==LogType.Error) {results.Add("ERROR: "+message);Write();}}
     void Check(bool value,string name) {results.Add((value?"PASS: ":"FAIL: ")+name);Write();}
     void Write() {File.WriteAllLines(Path.Combine(folder,"Verification.txt"),results);}
@@ -38,6 +53,7 @@ public class GameVerification : MonoBehaviour
             var p=FindFirstObjectByType<Player>();p.automated=true;
             yield return new WaitForSeconds(.7f);
             Check(p.IsGrounded,"Level "+level+" player lands on Ground");
+            Check(Mathf.Abs(p.healthSlider.fillRect.rect.width-p.healthSlider.GetComponent<RectTransform>().rect.width)<1,"Health fill fits slider bounds "+level);
             var pause=FindFirstObjectByType<PauseManager>();pause.TogglePause();float t=p.Elapsed;
             yield return new WaitForSecondsRealtime(.2f);Check(Time.timeScale==0&&p.Elapsed==t,"Pause freezes timer and physics "+level);pause.Resume();
             if(level==1)yield return Snap("02_Gameplay");
@@ -80,8 +96,9 @@ public class GameVerification : MonoBehaviour
         Check(player.health==0&&player.gameOverPanel.activeSelf&&Time.timeScale==0,"Five hits show Game Over and clamp health");yield return Snap("04_GameOver");
         Click("RestartButton");yield return LoadWait();Check(FindFirstObjectByType<Player>().health==100&&Time.timeScale==1,"Restart resets health and time scale");
         FindFirstObjectByType<MenuManager>().ToMenu();yield return LoadWait();Click("LabButton");yield return LoadWait();Check(FindFirstObjectByType<Mover>()!=null,"Module 2 lab accessible");yield return Snap("05_Module2");
-        foreach(var item in originals){if(item.Value<0)PlayerPrefs.DeleteKey(item.Key);else PlayerPrefs.SetFloat(item.Key,item.Value);}PlayerPrefs.Save();
-        results.Add("Test-generated records restored. Platform route uses real movement; extra coins use trigger positioning.");Write();
+        var persisted=new List<string>();foreach(var item in originals)persisted.Add(item.Key+"|"+PlayerPrefs.GetFloat(item.Key).ToString(System.Globalization.CultureInfo.InvariantCulture)+"|"+item.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        File.WriteAllLines(Path.GetFullPath(Path.Combine(Application.dataPath,"../QA_PERSIST_REQUEST")),persisted);PlayerPrefs.Save();
+        results.Add("Platform route uses real movement; extra coins use trigger positioning. Waiting for fresh process persistence check.");Write();
         FindFirstObjectByType<MenuManager>().ToMenu();yield return LoadWait();Application.Quit();
     }
 }

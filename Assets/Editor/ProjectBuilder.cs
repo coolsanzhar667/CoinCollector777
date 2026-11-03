@@ -147,7 +147,7 @@ public static class ProjectBuilder
         manager.timerText=Text("TimerText",canvas,"0.0 с",0,285,200,30,18,Muted,false,TextAlignmentOptions.Center);
         p.healthText=Text("HealthText",canvas,"Өмір: 100",425,318,260,32,21,White,true);
         var sliderGO=Rect("HealthSlider",canvas,425,287,260,10);var back=sliderGO.gameObject.AddComponent<Image>();back.color=new Color(.15f,.24f,.3f);var slider=sliderGO.gameObject.AddComponent<Slider>();slider.minValue=0;slider.maxValue=100;slider.value=100;slider.wholeNumbers=true;slider.interactable=false;
-        var fill=Box("Fill",sliderGO,0,0,260,10,Teal);slider.fillRect=fill.rectTransform;slider.targetGraphic=fill;p.healthSlider=slider;
+        var fill=Box("Fill",sliderGO,0,0,260,10,Teal);fill.rectTransform.anchorMin=Vector2.zero;fill.rectTransform.anchorMax=Vector2.one;fill.rectTransform.sizeDelta=Vector2.zero;fill.rectTransform.anchoredPosition=Vector2.zero;slider.fillRect=fill.rectTransform;slider.targetGraphic=fill;p.healthSlider=slider;
         Text("Controls",canvas,"A / D  —  жүру     SPACE  —  секіру     ESC  —  пауза",-225,-319,720,35,16,Muted);
         Text("Goal",canvas,"Барлық тиынды жина",410,-319,350,35,17,Gold,false,TextAlignmentOptions.Right);
         Transform card;p.winPanel=Panel("WinPanel","MISSION COMPLETE",level==3?"Барлық деңгей өтті!":"Жеңіс!","Барлық тиын жиналды. Тамаша саяхат!",out card);
@@ -169,7 +169,7 @@ public static class ProjectBuilder
         for(int i=0;i<4;i++){float x=-450+i*300;var box=Box("LessonCard"+i,canvas,x,65,280,210,new Color(.04f,.11f,.17f,.95f));Text("Title",box.transform,titles[i],0,65,244,45,24,Teal,true);Text("Result",box.transform,contents[i],0,-20,244,115,19,White);}
         var tasks=new GameObject("Exercises");tasks.AddComponent<Task1>();tasks.AddComponent<Task2>();tasks.AddComponent<Task3>();tasks.AddComponent<HealthLesson>();
         Text("MoverInfo",canvas,"05  Қозғалыс   /   A-D немесе ← →",-250,-115,700,45,25,Gold,true);Text("SpeedInfo",canvas,"1 = 2 м/с     2 = 5 м/с     3 = 10 м/с     SPACE → «Секіру!» (Console)",-150,-165,900,40,19,Muted);
-        var square=Art("Square","Explorer",new Vector2(0,-4.4f),new Vector2(.9f,.98f),5);square.AddComponent<Mover>();
+        var square=Art("Square","Square",new Vector2(0,-4.4f),new Vector2(.9f,.9f),5);square.AddComponent<Mover>();
         Button("MenuButton",canvas,"Мәзір",505,285,160,m.ToMenu);Text("Footer",canvas,"Нәтижелер Unity Console терезесіне де шығарылады.",0,-315,1000,35,17,Muted,false,TextAlignmentOptions.Center);Save("Module2");
     }
     [MenuItem("Coin Collector/Validate scenes")]

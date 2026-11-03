@@ -1,4 +1,4 @@
-# Тиын жинаушы / CoinCollector
+# CoinCollector777 — Тиын жинаушы
 
 Unity 6.0.83f1 · 2D platformer · Modules 2–5
 
@@ -68,9 +68,16 @@ Arial взят из установленной Windows для отображен
 
 ## GitHub
 
-Unity .gitignore подготовлен. Публикация в аккаунт GitHub — отдельный внешний шаг;
-ссылка появится только после фактической публикации. Library, Temp, Logs и сборку
-добавлять в репозиторий не нужно.
+Репозиторий: https://github.com/coolsanzhar667/CoinCollector777
+
+Unity .gitignore исключает Library, Temp, Logs и локальные сборки.
+Скриншоты и отчёт интеграционной проверки находятся в `Documentation`.
+
+![Главное меню](Documentation/Screenshots/01_Menu.png)
+
+![Игровой экран](Documentation/Screenshots/02_Gameplay.png)
+
+![Победа](Documentation/Screenshots/03_Victory.png)
 
 Справка по используемым Unity API:
 - https://docs.unity3d.com/6000.0/ScriptReference/Rigidbody2D-linearVelocity.html

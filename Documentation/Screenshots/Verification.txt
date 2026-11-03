@@ -1,0 +1,44 @@
+PASS: Play button loads Game
+PASS: Level 1 player lands on Ground
+PASS: Health fill fits slider bounds 1
+PASS: Pause freezes timer and physics 1
+PASS: Reach platform 1 in level 1 using physics
+PASS: Reach platform 2 in level 1 using physics
+PASS: Reach platform 3 in level 1 using physics
+PASS: Reach platform 4 in level 1 using physics
+PASS: Reach platform 5 in level 1 using physics
+PASS: Level 1 all coins trigger victory
+PASS: Record stored for BestTime_Game
+PASS: Next button loads level 2
+PASS: Level 2 player lands on Ground
+PASS: Health fill fits slider bounds 2
+PASS: Pause freezes timer and physics 2
+PASS: Reach platform 1 in level 2 using physics
+PASS: Reach platform 2 in level 2 using physics
+PASS: Reach platform 3 in level 2 using physics
+PASS: Reach platform 4 in level 2 using physics
+PASS: Reach platform 5 in level 2 using physics
+PASS: Level 2 all coins trigger victory
+PASS: Record stored for BestTime_Level2
+PASS: Next button loads level 3
+PASS: Level 3 player lands on Ground
+PASS: Health fill fits slider bounds 3
+PASS: Pause freezes timer and physics 3
+PASS: Reach platform 1 in level 3 using physics
+PASS: Reach platform 2 in level 3 using physics
+PASS: Reach platform 3 in level 3 using physics
+PASS: Reach platform 4 in level 3 using physics
+PASS: Reach platform 5 in level 3 using physics
+PASS: Level 3 all coins trigger victory
+PASS: Record stored for BestTime_Level3
+PASS: Final level has no Next button
+PASS: Menu shows level 1 record
+PASS: Enemy collision lowers health and slider
+PASS: Five hits show Game Over and clamp health
+PASS: Restart resets health and time scale
+PASS: Module 2 lab accessible
+Platform route uses real movement; extra coins use trigger positioning. Waiting for fresh process persistence check.
+PASS: Record survives full process restart: BestTime_Game
+PASS: Record survives full process restart: BestTime_Level2
+PASS: Record survives full process restart: BestTime_Level3
+Test-generated records restored; final verification complete.
